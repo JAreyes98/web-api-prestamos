@@ -21,30 +21,30 @@ import java.sql.Timestamp;
 @Table(name = "funcionarios")
 @Getter
 @Setter
+@IdClass(FuncionarioId.class)
 public class Funcionario implements Serializable {
 
     private final long serialVersionUID = 1L;
-
 
     @Id
     @Column(name = "id_cia")
     private Integer companyId;
 
-    @JoinColumn(name = "id_cia", referencedColumnName = "id_cia", insertable = false, updatable = false)
-    @ManyToOne
-    private Company company;
-
     @Id
     @Column(name = "id_funcionario")
     private Integer idFuncionario;
 
-    @JoinColumn(name = "id_sucursal", referencedColumnName = "id_sucursal",insertable = false, updatable = false)
-    @ManyToOne
-    private Sucursal sucursal;
-
     @Id
     @Column(name = "id_sucursal")
     private Integer idSucursal;
+
+    @JoinColumn(name = "id_cia", referencedColumnName = "id_cia", insertable = false, updatable = false)
+    @ManyToOne
+    private Company company;
+
+    @JoinColumn(name = "id_sucursal", referencedColumnName = "id_sucursal",insertable = false, updatable = false)
+    @ManyToOne
+    private Sucursal sucursal;
 
     @Column(name = "nombre")
     private String nombres;
