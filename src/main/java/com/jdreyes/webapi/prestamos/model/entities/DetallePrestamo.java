@@ -28,15 +28,12 @@ public class DetallePrestamo {
     @Column(name = "Monto_Cuota")
     private BigDecimal montoCuota;
 
-    @Column(name = "Saldo")
-    private BigDecimal saldo;
-
     @Column(name = "pago")
     private BigDecimal pago;
 
 
     @Column(name = "Saldo")
-    private BigDecimal sando;
+    private BigDecimal saldo;
 
     @Column(name = "Fecha_ultimo_Pago")
     private Date fechaUltimoPago;
