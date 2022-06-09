@@ -21,12 +21,12 @@ import java.sql.Timestamp;
 @Table(name = "funcionarios")
 @Getter
 @Setter
-@IdClass(FuncionarioId.class)
+//@IdClass(FuncionarioId.class)
 public class Funcionario implements Serializable {
 
     private final long serialVersionUID = 1L;
 
-    @Id
+//    @Id
     @Column(name = "id_cia")
     private Integer companyId;
 
@@ -34,7 +34,7 @@ public class Funcionario implements Serializable {
     @Column(name = "id_funcionario")
     private Integer idFuncionario;
 
-    @Id
+//    @Id
     @Column(name = "id_sucursal")
     private Integer idSucursal;
 
