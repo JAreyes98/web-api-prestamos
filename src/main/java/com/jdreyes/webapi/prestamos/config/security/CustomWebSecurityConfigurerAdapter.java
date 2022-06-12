@@ -1,6 +1,6 @@
 package com.jdreyes.webapi.prestamos.config.security;
 
-import com.jdreyes.webapi.prestamos.model.dto.security.AuthoritiesBuilder;
+import com.jdreyes.webapi.prestamos.service.dtos.security.AuthoritiesBuilder;
 import com.jdreyes.webapi.prestamos.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

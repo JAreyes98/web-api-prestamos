@@ -1,6 +1,7 @@
 package com.jdreyes.webapi.prestamos.service.utils;
 
-import com.jdreyes.webapi.prestamos.model.dto.security.UserDetails;
+import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
+import com.jdreyes.webapi.prestamos.service.dtos.security.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -32,12 +33,12 @@ public class ContextUtils {
         return getContext().getBean(CryptoCipher.class);
     }
 
-    public static UserDetails getCurrentUser(){
+    public static FuncionarioDto getCurrentUser(){
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth instanceof AnonymousAuthenticationToken) {
             throw new SecurityException("No se permite acceder a la persistencia al usuario anónimo");
         }
         var userAuth = (UsernamePasswordAuthenticationToken) auth;
-        return (UserDetails) (userAuth.getPrincipal());
+        return (FuncionarioDto) (userAuth.getPrincipal());
     }
 }
