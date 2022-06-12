@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @Setter
 public class Cargo implements Serializable {
 
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @JoinColumn(name = "id_sucursal", referencedColumnName = "id_sucursal",insertable = false, updatable = false)
     @ManyToOne

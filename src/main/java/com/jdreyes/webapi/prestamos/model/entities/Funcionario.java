@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 //@IdClass(FuncionarioId.class)
 public class Funcionario implements Serializable {
 
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 //    @Id
     @Column(name = "id_cia")

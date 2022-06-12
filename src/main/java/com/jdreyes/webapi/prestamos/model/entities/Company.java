@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Data
 public class Company implements Serializable {
 
-  private final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   @Id
   @Column(name = "Id_Cia")

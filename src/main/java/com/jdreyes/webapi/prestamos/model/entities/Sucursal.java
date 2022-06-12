@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @Data
 public class Sucursal implements Serializable {
 
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "Id_Sucursal")
