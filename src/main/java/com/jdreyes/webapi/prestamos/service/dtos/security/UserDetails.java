@@ -1,4 +1,4 @@
-package com.jdreyes.webapi.prestamos.model.dto.security;
+package com.jdreyes.webapi.prestamos.service.dtos.security;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
