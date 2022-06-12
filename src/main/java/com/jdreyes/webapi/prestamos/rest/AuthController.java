@@ -1,7 +1,7 @@
 package com.jdreyes.webapi.prestamos.rest;
 
 import com.jdreyes.webapi.prestamos.model.dto.ResponseBaseFactory;
-import com.jdreyes.webapi.prestamos.model.dto.security.UserDetails;
+import com.jdreyes.webapi.prestamos.service.dtos.security.UserDetails;
 import com.jdreyes.webapi.prestamos.service.utils.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
