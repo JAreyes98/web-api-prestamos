@@ -7,6 +7,13 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+/**
+ * Entidad que representa el modelo de datos de la tabla prestamos detalle.
+ *
+ * @author Josue Reyes
+ * @version 1.0
+ * @since 1.0, 2022-06-07
+ */
 @Entity
 @Getter
 @Setter
