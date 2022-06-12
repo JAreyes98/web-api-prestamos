@@ -1,8 +1,9 @@
 package com.jdreyes.webapi.prestamos.service.impl;
 
 import com.jdreyes.webapi.prestamos.model.dao.UsuarioRepository;
-import com.jdreyes.webapi.prestamos.model.dto.security.AuthoritiesBuilder;
-import com.jdreyes.webapi.prestamos.model.dto.security.UserDetails;
+import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
+import com.jdreyes.webapi.prestamos.service.dtos.security.AuthoritiesBuilder;
+import com.jdreyes.webapi.prestamos.service.dtos.security.UserDetails;
 import com.jdreyes.webapi.prestamos.model.entities.AppUser;
 import com.jdreyes.webapi.prestamos.service.UserService;
 import com.jdreyes.webapi.prestamos.service.utils.AppProperties;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     // Codifica la password para el contexto de Spring.
     password = ContextUtils.encoder().encode(password);
 
-    return new UserDetails(
+    return new FuncionarioDto(
         user.getIdUsuario(),
         user.getUserName(),
         password,
