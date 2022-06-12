@@ -21,7 +21,7 @@ import java.util.Objects;
         @EntityResult(
             entityClass = CobroPrestamoDto.class,
             fields = {
-              @FieldResult(name = "idPrestamo", column = "id_Prestamo"),
+              @FieldResult(name = "idPrestamo", column = "id_Prestamos"),
               @FieldResult(name = "idRuta", column = "id_Ruta"),
               @FieldResult(name = "nombreRuta", column = "Nombre_Ruta"),
               @FieldResult(name = "idCliente", column = "id_Cliente"),
