@@ -5,6 +5,7 @@ import com.jdreyes.webapi.prestamos.model.dao.PagosDAO;
 import com.jdreyes.webapi.prestamos.model.dto.CobroPrestamoDto;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.ParameterMode;
 import java.math.BigDecimal;
 import java.util.List;
 /**
@@ -28,8 +29,9 @@ public class PagosDAOImpl extends BaseQueryExecutor implements PagosDAO {
    */
   @Override
   public List<CobroPrestamoDto> getCobrosDia(Integer idFuncionario) {
-    return createStoredProcedureQuery("call Sp_Cobros_del_Dia :idFuncionario", "cobrosDiaDtoMapper")
-        .setParameter("idFuncionario", idFuncionario)
+    return createStoredProcedureQuery("Sp_Cobros_del_Dia ", "cobrosDiaDtoMapper")
+        .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+        .setParameter(1, idFuncionario)
         .getResultList();
   }
 
@@ -42,9 +44,11 @@ public class PagosDAOImpl extends BaseQueryExecutor implements PagosDAO {
    */
   @Override
   public boolean grabarReciboCaja(Integer idPrestamo, BigDecimal monto) {
-    return createStoredProcedureQuery("call Sp_Graba_recibo_Caja :p_id_Prestamos, :P_mont")
-            .setParameter("p_id_Prestamos", idPrestamo)
-            .setParameter("P_mont", monto)
+    return createStoredProcedureQuery("Sp_Graba_recibo_Caja")
+            .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(2, BigDecimal.class, ParameterMode.IN)
+            .setParameter(1, idPrestamo)
+            .setParameter(2, monto)
             .executeUpdate()
         > 0;
   }
@@ -59,13 +63,19 @@ public class PagosDAOImpl extends BaseQueryExecutor implements PagosDAO {
    * @return bandera que indica si se grabo el deposito.
    */
   @Override
-  public boolean grabarDeposito(Integer idFuncinario, String noCuenta, Integer noMinuta, BigDecimal monto) {
-    return createStoredProcedureQuery("call Sp_Graba_deposito :P_Id_Gestor, :P_Id_Cuenta_Bancaria, :p_Minuta :P_Monto")
-            .setParameter("P_Id_Gestor", idFuncinario)
-            .setParameter("P_Id_Cuenta_Bancaria", noCuenta)
-            .setParameter("p_Minuta", noMinuta)
-            .setParameter("P_Monto", monto)
+  public boolean grabarDeposito(
+      Integer idFuncinario, String noCuenta, Integer noMinuta, BigDecimal monto) {
+    return createStoredProcedureQuery(
+                "Sp_Graba_deposito")
+            .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(3, Integer.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(4, BigDecimal.class, ParameterMode.IN)
+            .setParameter(1, idFuncinario)
+            .setParameter(2, noCuenta.toString())
+            .setParameter(3, noMinuta)
+            .setParameter(4, monto)
             .executeUpdate()
-            > 0;
+        > 0;
   }
 }
