@@ -6,6 +6,7 @@ import com.jdreyes.webapi.prestamos.service.utils.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since `1.0
  */
 @RestController
-@RequestMapping("/api/auth/")
+@RequestMapping("/api/prestamos/auth/")
 @Slf4j
 public class AuthController {
 
@@ -27,7 +28,7 @@ public class AuthController {
   //    this.authService = authService;
   //  }
 
-  @PostMapping(path = "login/v1")
+  @GetMapping(path = "login/v1")
   public ResponseEntity<?> loggedIn() {
 
     try {

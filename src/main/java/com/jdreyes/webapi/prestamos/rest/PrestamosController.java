@@ -43,7 +43,7 @@ public class PrestamosController {
    * @return Cobros dia envuelto.
    * @since 1.0
    */
-  @GetMapping(path = "cobros/dia")
+  @GetMapping(path = "cobros/dia/v1")
   public ResponseEntity<?> cobrosDia() {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
@@ -65,7 +65,7 @@ public class PrestamosController {
    * @return EStatus ok.
    * @since 1.0
    */
-  @PostMapping(path = "cliente/pagos/recibo/save")
+  @PostMapping(path = "cliente/pagos/recibo/save/v1")
   public ResponseEntity<?> reciboCaja(@RequestBody ReciboCajaDto reciboCaja) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
@@ -91,7 +91,7 @@ public class PrestamosController {
    * @return devuelve un estatus OK.
    * @since 1.0
    */
-  @PostMapping(path = "banco/deposito/save")
+  @PostMapping(path = "banco/deposito/save/v1")
   public ResponseEntity<?> depositoBanco(@RequestBody DepositoBancoDto depositoBanco) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
@@ -117,7 +117,7 @@ public class PrestamosController {
    * @return tablade pago.
    * @since 1.0
    */
-  @GetMapping(path = "cliente/pagos/tablapago")
+  @GetMapping(path = "cliente/pagos/tablapago/v1")
   public ResponseEntity<?> tablaPagos(PrestamoDto prestamoDto) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {

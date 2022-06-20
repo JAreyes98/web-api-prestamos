@@ -87,9 +87,6 @@
     <profiles>
         <profile>
             <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
 <!--                <env>dev</env>-->
                 <activatedProperties>dev</activatedProperties>
@@ -97,6 +94,9 @@
         </profile>
         <profile>
             <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
 <!--                <env>prod</env>-->
                 <activatedProperties>prod</activatedProperties>

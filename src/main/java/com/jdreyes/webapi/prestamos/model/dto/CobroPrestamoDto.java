@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -65,7 +66,7 @@ public class CobroPrestamoDto extends PrestamoDto implements Serializable {
   /**
    * Variable que contiene la info de si el cobro esta vencido o no.
    */
-  @Getter @Setter private Boolean vencido;
+  @Getter @Setter private BigDecimal vencido;
 
   /**
    * Contiene la informacion de la ruta.
