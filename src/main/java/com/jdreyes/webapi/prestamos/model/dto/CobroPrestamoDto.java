@@ -95,7 +95,9 @@ public class CobroPrestamoDto extends PrestamoDto implements Serializable {
   @Setter @Transient private RutaDto ruta;
   /** Contiene la informacion del cliente. */
   @Setter @Transient private ClienteDto cliente;
-
+/**
+ * Variable que contiene el codigo del prestamo.
+ */
   @Getter @Setter String codigo;
 
   /**
