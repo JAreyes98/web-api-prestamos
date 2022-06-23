@@ -1,4 +1,4 @@
-package com.jdreyes.webapi.prestamos.service;
+package com.jdreyes.webapi.prestamos.service.impl;
 
 import com.jdreyes.webapi.prestamos.infraestructure.CobrosDiaNotFoundException;
 import com.jdreyes.webapi.prestamos.infraestructure.MontoCanNotBeZero;
@@ -10,6 +10,7 @@ import com.jdreyes.webapi.prestamos.model.dto.CobrosDia;
 import com.jdreyes.webapi.prestamos.model.dto.DetPrestamoDto;
 import com.jdreyes.webapi.prestamos.model.dto.PrestamoDto;
 import com.jdreyes.webapi.prestamos.model.entities.DetallePrestamo;
+import com.jdreyes.webapi.prestamos.service.PrestamosService;
 import com.jdreyes.webapi.prestamos.service.dtos.DepositoBancoDto;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
