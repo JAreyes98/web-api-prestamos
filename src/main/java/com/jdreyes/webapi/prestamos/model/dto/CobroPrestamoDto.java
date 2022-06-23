@@ -41,6 +41,7 @@ import java.util.Objects;
               @FieldResult(name = "cuotas", column = "cuotas"),
               @FieldResult(name = "cuotasPagadas", column = "cuotas_pagadas"),
               @FieldResult(name = "cuotasVencidas", column = "cuotas_vencidas"),
+              @FieldResult(name = "codigo", column = "codigo"),
             }))
 public class CobroPrestamoDto extends PrestamoDto implements Serializable {
 
@@ -94,6 +95,8 @@ public class CobroPrestamoDto extends PrestamoDto implements Serializable {
   @Setter @Transient private RutaDto ruta;
   /** Contiene la informacion del cliente. */
   @Setter @Transient private ClienteDto cliente;
+
+  @Getter @Setter String codigo;
 
   /**
    * Obtiene la info de la ruta.
