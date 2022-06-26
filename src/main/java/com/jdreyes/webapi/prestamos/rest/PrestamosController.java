@@ -118,7 +118,7 @@ public class PrestamosController {
    * @since 1.0
    */
   @GetMapping(path = "cliente/pagos/tablapago/v1")
-  public ResponseEntity<?> tablaPagos(PrestamoDto prestamoDto) {
+  public ResponseEntity<?> tablaPagos(@RequestBody  PrestamoDto prestamoDto) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
       DetPrestamoDto tablaPago = prestamosService.getTablaPago(prestamoDto);
