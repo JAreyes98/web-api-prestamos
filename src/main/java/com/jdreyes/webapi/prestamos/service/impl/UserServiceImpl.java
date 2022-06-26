@@ -1,11 +1,14 @@
 package com.jdreyes.webapi.prestamos.service.impl;
 
+import com.jdreyes.webapi.prestamos.model.dao.DeviceDAO;
 import com.jdreyes.webapi.prestamos.model.dao.UsuarioRepository;
+import com.jdreyes.webapi.prestamos.model.dto.MacRequest;
+import com.jdreyes.webapi.prestamos.model.entities.AppUser;
+import com.jdreyes.webapi.prestamos.model.entities.Device;
+import com.jdreyes.webapi.prestamos.service.UserService;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.security.AuthoritiesBuilder;
 import com.jdreyes.webapi.prestamos.service.dtos.security.UserDetails;
-import com.jdreyes.webapi.prestamos.model.entities.AppUser;
-import com.jdreyes.webapi.prestamos.service.UserService;
 import com.jdreyes.webapi.prestamos.service.utils.AppProperties;
 import com.jdreyes.webapi.prestamos.service.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +16,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UsuarioRepository repository;
+  private final DeviceDAO deviceDAO;
 
   @Autowired
-  public UserServiceImpl(UsuarioRepository repository) {
+  public UserServiceImpl(UsuarioRepository repository, DeviceDAO deviceDAO) {
     this.repository = repository;
+    this.deviceDAO = deviceDAO;
   }
 
   @Override
@@ -60,5 +67,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   @Override
   public Optional<AppUser> findUser(String username) {
     return repository.findUser(username);
+  }
+
+  public Optional<Device> buscarDispositivo(MacRequest macRequest) {
+    Objects.requireNonNull(macRequest, "Se debe especificar el objeto MAC");
+    Objects.requireNonNull(
+        macRequest.getMac(), "Se debe especificar la direccion mac del dispositivo");
+    return Optional.ofNullable(deviceDAO.findByMacEquals(macRequest.getMac()));
+  }
+
+  @Override
+  public List<Device> buscarDispositivo(Integer id) {
+    return deviceDAO.findByIdUsuarioEquals(id);
+  }
+
+  @Override
+  public Device saveDevice(MacRequest mac) {
+
+    UserDetails user = ContextUtils.getCurrentUser();
+
+    Device device = new Device();
+    device.setAct(1);
+    device.setIdUsuario(user.getUserId());
+    device.setMac(mac.getMac());
+
+    return deviceDAO.save(device);
   }
 }
