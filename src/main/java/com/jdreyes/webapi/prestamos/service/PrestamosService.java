@@ -3,10 +3,14 @@ package com.jdreyes.webapi.prestamos.service;
 import com.jdreyes.webapi.prestamos.model.dto.CobrosDia;
 import com.jdreyes.webapi.prestamos.model.dto.DetPrestamoDto;
 import com.jdreyes.webapi.prestamos.model.dto.PrestamoDto;
+import com.jdreyes.webapi.prestamos.model.entities.Plazo;
+import com.jdreyes.webapi.prestamos.rest.dto.PrestamoRequestDto;
 import com.jdreyes.webapi.prestamos.service.dtos.AbonosDto;
 import com.jdreyes.webapi.prestamos.service.dtos.DepositoBancoDto;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
+
+import java.util.List;
 
 /**
  * Definición del servicio de préstamos.
@@ -16,6 +20,8 @@ import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
  * @version 1.0
  */
 public interface PrestamosService {
+
+  void save(PrestamoRequestDto prestamo);
 
   /**
    * Obtiene los cobros del dia a los que les debe dar seguimiento el funcionario {@code
@@ -55,4 +61,6 @@ public interface PrestamosService {
   DetPrestamoDto getTablaPago(PrestamoDto cobroPrestamo);
 
 AbonosDto getAbonosFuncionarios(Integer idFuncionario, String fechaIni, String fechaFin);
+
+List<Plazo> getPlazos();
 }

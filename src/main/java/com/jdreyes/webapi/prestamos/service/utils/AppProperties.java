@@ -18,4 +18,7 @@ public final class AppProperties {
 
     @Value("${cypher.enabled}")
     private boolean cypherEnabled;
+
+    @Value("${application.interesrate}")
+    private Integer interesrate;
 }

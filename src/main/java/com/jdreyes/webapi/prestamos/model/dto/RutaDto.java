@@ -1,8 +1,6 @@
 package com.jdreyes.webapi.prestamos.model.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -16,6 +14,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class RutaDto implements Serializable {
   private static final long serialVersionUID = 1L;
   /** Identificador de la ruta. */
