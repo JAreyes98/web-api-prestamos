@@ -2,6 +2,7 @@ package com.jdreyes.webapi.prestamos.model.dao.impl;
 
 import com.jdreyes.persistence.impl.BaseQueryExecutor;
 import com.jdreyes.webapi.prestamos.model.dao.PagosDAO;
+import com.jdreyes.webapi.prestamos.model.dto.AbonosFuncionarioDto;
 import com.jdreyes.webapi.prestamos.model.dto.CobroPrestamoDto;
 import org.springframework.stereotype.Repository;
 
@@ -77,5 +78,18 @@ public class PagosDAOImpl extends BaseQueryExecutor implements PagosDAO {
             .setParameter(4, monto)
             .executeUpdate()
         > 0;
+  }
+
+
+  @Override
+  public List<AbonosFuncionarioDto> getCobrosDia(Integer idFuncionario, String fechaIni, String fechaFin) {
+    return createStoredProcedureQuery("sp_Retorna_Abonos_por_Fechas ", "abonosFuncionarioDto")
+            .registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter(3, String.class, ParameterMode.IN)
+            .setParameter(1, idFuncionario)
+            .setParameter(2, fechaIni)
+            .setParameter(3, fechaFin)
+            .getResultList();
   }
 }

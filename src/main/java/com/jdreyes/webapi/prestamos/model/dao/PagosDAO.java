@@ -1,5 +1,6 @@
 package com.jdreyes.webapi.prestamos.model.dao;
 
+import com.jdreyes.webapi.prestamos.model.dto.AbonosFuncionarioDto;
 import com.jdreyes.webapi.prestamos.model.dto.CobroPrestamoDto;
 
 import java.math.BigDecimal;
@@ -40,4 +41,6 @@ public interface PagosDAO {
    * @return bandera que indica si se grabo el deposito.
    */
   boolean grabarDeposito(Integer idFuncinario, String noCuenta, Integer noMinuta, BigDecimal monto);
+
+  List<AbonosFuncionarioDto> getCobrosDia(Integer idFuncionario, String fechaIni, String fechaFin);
 }
