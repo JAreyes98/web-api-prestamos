@@ -4,17 +4,23 @@ import com.jdreyes.webapi.prestamos.model.dto.CobrosDia;
 import com.jdreyes.webapi.prestamos.model.dto.DetPrestamoDto;
 import com.jdreyes.webapi.prestamos.model.dto.PrestamoDto;
 import com.jdreyes.webapi.prestamos.model.dto.ResponseBaseFactory;
+import com.jdreyes.webapi.prestamos.rest.dto.AbonoFilter;
 import com.jdreyes.webapi.prestamos.rest.dto.ResultMessage;
 import com.jdreyes.webapi.prestamos.service.PrestamosService;
+import com.jdreyes.webapi.prestamos.service.dtos.AbonosDto;
 import com.jdreyes.webapi.prestamos.service.dtos.DepositoBancoDto;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
 import com.jdreyes.webapi.prestamos.service.utils.ContextUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * API rest para control de prestamos.
@@ -133,6 +139,32 @@ public class PrestamosController {
               "[%s] Error en \"tablaPagos\" -> \"%s\"",
               user.getUsername(), getClass().getSimpleName()),
           e);
+      return ResponseBaseFactory.wrap(null, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+  }
+
+  @PostMapping(path = "cliente/pagos/dia/v1")
+  public ResponseEntity<?> abonos(@RequestBody AbonoFilter filter) {
+    FuncionarioDto user = ContextUtils.getCurrentUser();
+    try {
+//      String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyy-MM-dd"));
+      AbonosDto abonosDto = prestamosService.getAbonosFuncionarios(user.getIdFuncionario(), filter.getFechaIni(), filter.getFechaFin());
+      abonosDto.getAbonos().forEach(c -> {
+        user.setPassword(null);
+        c.setFuncionario(user);
+      });
+      log.info(
+              "[{}] Obteniendo los abonos desde {} hasta {}",
+              user.getUsername(),
+              filter.getFechaIni(),
+              filter.getFechaFin());
+      return ResponseBaseFactory.wrap(abonosDto);
+    } catch (Exception e) {
+      log.error(
+              String.format(
+                      "[%s] Error en \"abonos\" -> \"%s\"",
+                      user.getUsername(), getClass().getSimpleName()),
+              e);
       return ResponseBaseFactory.wrap(null, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
   }
