@@ -5,12 +5,10 @@ import com.jdreyes.webapi.prestamos.infraestructure.MontoCanNotBeZero;
 import com.jdreyes.webapi.prestamos.infraestructure.TablaPagoIsEmptyException;
 import com.jdreyes.webapi.prestamos.model.dao.DetallePrestamoDAO;
 import com.jdreyes.webapi.prestamos.model.dao.PagosDAO;
-import com.jdreyes.webapi.prestamos.model.dto.CobroPrestamoDto;
-import com.jdreyes.webapi.prestamos.model.dto.CobrosDia;
-import com.jdreyes.webapi.prestamos.model.dto.DetPrestamoDto;
-import com.jdreyes.webapi.prestamos.model.dto.PrestamoDto;
+import com.jdreyes.webapi.prestamos.model.dto.*;
 import com.jdreyes.webapi.prestamos.model.entities.DetallePrestamo;
 import com.jdreyes.webapi.prestamos.service.PrestamosService;
+import com.jdreyes.webapi.prestamos.service.dtos.AbonosDto;
 import com.jdreyes.webapi.prestamos.service.dtos.DepositoBancoDto;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
@@ -20,8 +18,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Implementación del servicio de préstamos.
@@ -140,5 +144,49 @@ public class PrestamosServiceImpl implements PrestamosService {
     detPrestamoDto.setIdPrestamo(cobroPrestamo.getIdPrestamo());
     detPrestamoDto.setPrestamos(prestamos);
     return detPrestamoDto;
+  }
+
+  @Override
+  public AbonosDto getAbonosFuncionarios(Integer idFuncionario, String fechaIni, String fechaFin) {
+    Objects.requireNonNull(idFuncionario, "Se requiere un funcionario");
+    Objects.requireNonNull(fechaIni, "Se debe especificar la fecha de inicio");
+    Objects.requireNonNull(fechaFin, "Se debe especificar la fecha de fin");
+    List<AbonosFuncionarioDto> abonots = pagosDAO.getCobrosDia(idFuncionario, fechaIni, fechaFin);
+
+    Function<AbonosFuncionarioDto, LocalDate> parse =
+        s1 -> LocalDate.parse(s1.getFecha(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+    final List<AbonosFuncionarioDto> finalAbonos = new ArrayList<>();
+    abonots.stream()
+        .collect(Collectors.groupingBy(AbonosFuncionarioDto::getCliente))
+        .forEach(
+            (key, value) -> {
+              value.stream()
+                  .max(Comparator.comparing(parse))
+                  .ifPresent(
+                      a -> {
+                        AbonosFuncionarioDto abono = new AbonosFuncionarioDto();
+                        abono.setFuncionario(a.getFuncionario());
+                        abono.setCliente(key);
+                        abono.setCodigo(a.getCodigo());
+                        abono.setFecha(a.getFecha());
+                        abono.setMonto(
+                            BigDecimal.valueOf(
+                                value.stream()
+                                    .mapToDouble(
+                                        v ->
+                                            (Objects.nonNull(v.getMonto())
+                                                    ? v.getMonto()
+                                                    : BigDecimal.ZERO)
+                                                .doubleValue())
+                                    .sum()));
+                        abono.setRuta(a.getRuta());
+                        finalAbonos.add(abono);
+                      });
+            });
+
+    finalAbonos.sort(Comparator.comparing(parse).reversed());
+    BigDecimal total = BigDecimal.valueOf(finalAbonos.stream().mapToDouble(a -> (Objects.nonNull(a.getMonto()) ? a.getMonto() : BigDecimal.ZERO).doubleValue()).sum());
+    return new AbonosDto(finalAbonos, total);
   }
 }

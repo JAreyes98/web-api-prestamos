@@ -3,6 +3,7 @@ package com.jdreyes.webapi.prestamos.service;
 import com.jdreyes.webapi.prestamos.model.dto.CobrosDia;
 import com.jdreyes.webapi.prestamos.model.dto.DetPrestamoDto;
 import com.jdreyes.webapi.prestamos.model.dto.PrestamoDto;
+import com.jdreyes.webapi.prestamos.service.dtos.AbonosDto;
 import com.jdreyes.webapi.prestamos.service.dtos.DepositoBancoDto;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 import com.jdreyes.webapi.prestamos.service.dtos.ReciboCajaDto;
@@ -52,4 +53,6 @@ public interface PrestamosService {
    * @since 1.0
    */
   DetPrestamoDto getTablaPago(PrestamoDto cobroPrestamo);
+
+AbonosDto getAbonosFuncionarios(Integer idFuncionario, String fechaIni, String fechaFin);
 }
