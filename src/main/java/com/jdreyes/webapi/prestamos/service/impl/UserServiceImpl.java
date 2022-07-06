@@ -11,6 +11,7 @@ import com.jdreyes.webapi.prestamos.service.dtos.security.AuthoritiesBuilder;
 import com.jdreyes.webapi.prestamos.service.dtos.security.UserDetails;
 import com.jdreyes.webapi.prestamos.service.utils.AppProperties;
 import com.jdreyes.webapi.prestamos.service.utils.ContextUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
 
   private final UsuarioRepository repository;
@@ -35,6 +37,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
     boolean cypher = ContextUtils.getContext().getBean(AppProperties.class).isCypherEnabled();
+    log.info("[System] loggin usuario \"{}\" with cypher {}",
+            s, cypher ? ContextUtils.cryptoCipher().getClass().getSimpleName() : "DISABLED");
 
     Optional<AppUser> userOpt = repository.findUser(s);
     AppUser user = userOpt.orElseThrow(() -> new UsernameNotFoundException(s));

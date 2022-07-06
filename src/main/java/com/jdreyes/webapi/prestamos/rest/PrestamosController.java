@@ -53,8 +53,10 @@ public class PrestamosController {
   public ResponseEntity<?> cobrosDia() {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
-      CobrosDia cobrosDia = prestamosService.getCobrosDiaByIdFuncionario(user);
+
       log.info("[{}] obteniedo cobros del dia", user.getUsername());
+      CobrosDia cobrosDia = prestamosService.getCobrosDiaByIdFuncionario(user);
+      log.info("[{}] cobros dias obtenidos {}", user.getUsername(), cobrosDia.getCobros().size());
       return ResponseBaseFactory.wrap(cobrosDia);
     } catch (Exception e) {
       log.error(
@@ -76,11 +78,15 @@ public class PrestamosController {
   public ResponseEntity<?> reciboCaja(@RequestBody ReciboCajaDto reciboCaja) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
+      log.info(
+              "[{}] registrando recibo de caja, prestamo={}",
+              user.getUsername(),
+              reciboCaja.getIdPrestamo());
       prestamosService.grabarReciboCaja(reciboCaja);
       log.info(
-          "[{}] registrando recibo de caja, prestamo={}",
-          user.getUsername(),
-          reciboCaja.getIdPrestamo());
+              "[{}] recibo de caja registrado, prestamo={}",
+              user.getUsername(),
+              reciboCaja.getIdPrestamo());
       return ResponseBaseFactory.wrap(new ResultMessage(HttpStatus.OK.getReasonPhrase()));
     } catch (Exception e) {
       log.error(
@@ -102,9 +108,13 @@ public class PrestamosController {
   public ResponseEntity<?> depositoBanco(@RequestBody DepositoBancoDto depositoBanco) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
+      log.info(
+              "[{}] Registrando deposito de banco a cuenta {}",
+              user.getUsername(),
+              depositoBanco.getNoCuenta());
       prestamosService.grabarDeposito(depositoBanco);
       log.info(
-          "[{}] Registrando deposito de banco a cuenta {}",
+          "[{}] Deposito de banco a cuenta {} realizado",
           user.getUsername(),
           depositoBanco.getNoCuenta());
       return ResponseBaseFactory.wrap(new ResultMessage(HttpStatus.OK.getReasonPhrase()));
@@ -128,11 +138,15 @@ public class PrestamosController {
   public ResponseEntity<?> tablaPagos(@RequestBody PrestamoDto prestamoDto) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
+      log.info(
+              "[{}] Obteniendo la tabla de pago del prestamo {}",
+              user.getUsername(),
+              prestamoDto.getIdPrestamo());
       DetPrestamoDto tablaPago = prestamosService.getTablaPago(prestamoDto);
       log.info(
-          "[{}] Obteniendo la tabla de pago del prestamo {}",
+          "[{}] Pagos obtenidos {}",
           user.getUsername(),
-          prestamoDto.getIdPrestamo());
+          tablaPago.getPrestamos().size());
       return ResponseBaseFactory.wrap(tablaPago);
     } catch (Exception e) {
       log.error(
@@ -148,6 +162,11 @@ public class PrestamosController {
   public ResponseEntity<?> abonos(@RequestBody AbonoFilter filter) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {
+      log.info(
+              "[{}] Obteniendo los abonos desde {} hasta {}",
+              user.getUsername(),
+              filter.getFechaIni(),
+              filter.getFechaFin());
       //      String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyy-MM-dd"));
       AbonosDto abonosDto =
           prestamosService.getAbonosFuncionarios(
@@ -160,10 +179,9 @@ public class PrestamosController {
                 c.setFuncionario(user);
               });
       log.info(
-          "[{}] Obteniendo los abonos desde {} hasta {}",
+          "[{}] Cobros obtenidos {}",
           user.getUsername(),
-          filter.getFechaIni(),
-          filter.getFechaFin());
+          abonosDto.getAbonos().size());
       return ResponseBaseFactory.wrap(abonosDto);
     } catch (Exception e) {
       log.error(
