@@ -191,7 +191,7 @@ public class PrestamosController {
     }
   }
 
-  @GetMapping("save")
+  @PostMapping("save")
   public ResponseEntity<?> registra(@RequestBody PrestamoRequestDto prestamo) {
     FuncionarioDto user = ContextUtils.getCurrentUser();
     try {

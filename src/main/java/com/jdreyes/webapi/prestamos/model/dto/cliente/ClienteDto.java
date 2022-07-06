@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Data
 public class ClienteDto implements Serializable {
 
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private Integer idCliente;
 

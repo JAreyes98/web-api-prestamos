@@ -1,12 +1,10 @@
 package com.jdreyes.webapi.prestamos.service.impl;
 
+import com.jdreyes.webapi.prestamos.infraestructure.BusinessException;
 import com.jdreyes.webapi.prestamos.infraestructure.CobrosDiaNotFoundException;
 import com.jdreyes.webapi.prestamos.infraestructure.MontoCanNotBeZero;
 import com.jdreyes.webapi.prestamos.infraestructure.TablaPagoIsEmptyException;
-import com.jdreyes.webapi.prestamos.model.dao.DetallePrestamoDAO;
-import com.jdreyes.webapi.prestamos.model.dao.PagosDAO;
-import com.jdreyes.webapi.prestamos.model.dao.PlazoRepository;
-import com.jdreyes.webapi.prestamos.model.dao.PrestamoDAO;
+import com.jdreyes.webapi.prestamos.model.dao.*;
 import com.jdreyes.webapi.prestamos.model.dto.*;
 import com.jdreyes.webapi.prestamos.model.entities.DetallePrestamo;
 import com.jdreyes.webapi.prestamos.model.entities.Plazo;
@@ -51,32 +49,67 @@ public class PrestamosServiceImpl implements PrestamosService {
 
   /** Acceso a datos de pagos. */
   private final PagosDAO pagosDAO;
+
   private final PrestamoDAO prestamoDAO;
   private final PlazoRepository plazoRepository;
+  private final ClienteDAO clienteDAO;
 
   /** Acceso a datos de prestamo. */
   private final DetallePrestamoDAO detallePrestamoDAO;
 
   @Autowired
-  public PrestamosServiceImpl(PagosDAO pagosDAO, PrestamoDAO prestamoDAO, PlazoRepository plazoRepository, DetallePrestamoDAO detallePrestamoDAO) {
+  public PrestamosServiceImpl(
+      PagosDAO pagosDAO,
+      PrestamoDAO prestamoDAO,
+      PlazoRepository plazoRepository,
+      ClienteDAO clienteDAO,
+      DetallePrestamoDAO detallePrestamoDAO) {
     this.pagosDAO = pagosDAO;
     this.prestamoDAO = prestamoDAO;
     this.plazoRepository = plazoRepository;
+    this.clienteDAO = clienteDAO;
     this.detallePrestamoDAO = detallePrestamoDAO;
   }
 
   @Override
   public void save(PrestamoRequestDto prestamo) {
+    FuncionarioDto funcionarioDto = ContextUtils.getCurrentUser();
     Objects.requireNonNull(prestamo.getCodigoPrestamo(), "Codigo requerido");
     Objects.requireNonNull(prestamo.getMontoPrestamo(), "Monto prestamo requerido");
     Objects.requireNonNull(prestamo.getDiasPago(), "Se deben especificar los dias de pago");
     Objects.requireNonNull(prestamo.getPlazoDias(), "Se debe especificar el plazo");
     Objects.requireNonNull(prestamo.getIdCliente(), "Se debe el cliente");
 
+    if (prestamo.getDiasPago().isEmpty())
+      throw new BusinessException("No se ha especificado los dias de pago");
+
+    if (prestamo.getCodigoPrestamo().trim().isEmpty())
+      throw new BusinessException("No se ha especificado un codigo valido");
+
+    if (prestamo.getMontoPrestamo().compareTo(BigDecimal.ZERO) <= 0)
+      throw new BusinessException("El monto de prestamos no puede ser cero o inferior.");
+
+    if (prestamo.getIdCliente() <= 0)
+      throw new BusinessException("Identificador de cliente invalido");
+
+    clienteDAO.findById(prestamo.getIdCliente(), funcionarioDto.getIdFuncionario()).stream()
+        .findFirst()
+        .orElseThrow(
+            () ->
+                new BusinessException(
+                    "No se encontro un cliente con el identificador "
+                        .concat(prestamo.getIdCliente().toString())));
+
     String fechaApertura = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     Integer interes = ContextUtils.getContext().getBean(AppProperties.class).getInteresrate();
-    prestamoDAO.save(prestamo.getIdCliente(),fechaApertura, prestamo.getMontoPrestamo(),interes,prestamo.getPlazoDias(),prestamo.getCodigoPrestamo(), buildDaysArray(prestamo.getDiasPago()));
-
+    prestamoDAO.save(
+        prestamo.getIdCliente(),
+        fechaApertura,
+        prestamo.getMontoPrestamo(),
+        interes,
+        prestamo.getPlazoDias(),
+        prestamo.getCodigoPrestamo(),
+        buildDaysArray(prestamo.getDiasPago()));
   }
 
   /**
@@ -145,7 +178,8 @@ public class PrestamosServiceImpl implements PrestamosService {
     return pagosDAO.grabarDeposito(
         depositoBanco.getFuncionario().getIdFuncionario(),
         depositoBanco.getNoCuenta(),
-            depositoBanco.getNoMinuta(), depositoBanco.getMonto());
+        depositoBanco.getNoMinuta(),
+        depositoBanco.getMonto());
   }
 
   /**
@@ -212,7 +246,14 @@ public class PrestamosServiceImpl implements PrestamosService {
             });
 
     finalAbonos.sort(Comparator.comparing(parse).reversed());
-    BigDecimal total = BigDecimal.valueOf(finalAbonos.stream().mapToDouble(a -> (Objects.nonNull(a.getMonto()) ? a.getMonto() : BigDecimal.ZERO).doubleValue()).sum());
+    BigDecimal total =
+        BigDecimal.valueOf(
+            finalAbonos.stream()
+                .mapToDouble(
+                    a ->
+                        (Objects.nonNull(a.getMonto()) ? a.getMonto() : BigDecimal.ZERO)
+                            .doubleValue())
+                .sum());
     return new AbonosDto(finalAbonos, total);
   }
 
@@ -222,6 +263,10 @@ public class PrestamosServiceImpl implements PrestamosService {
   }
 
   private int[] buildDaysArray(List<DayOfWeek> dias) {
-    return Stream.of(DayOfWeek.values()).sorted().mapToInt(i -> dias.contains(i) ? 1 : 0).toArray();
+    return Stream.of(DayOfWeek.values())
+        .filter(o -> o != DayOfWeek.SUNDAY)
+        .sorted()
+        .mapToInt(i -> dias.contains(i) ? 1 : 0)
+        .toArray();
   }
 }

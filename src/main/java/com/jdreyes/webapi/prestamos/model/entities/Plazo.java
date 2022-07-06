@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Table(name = "plazo_meses")
 public class Plazo implements Serializable {
 
-  private final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   @Id
   @Column(name = "Plazo")

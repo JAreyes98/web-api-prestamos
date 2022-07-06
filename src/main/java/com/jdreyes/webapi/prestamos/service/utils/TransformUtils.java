@@ -6,6 +6,8 @@ import com.jdreyes.webapi.prestamos.model.entities.Cliente;
 import com.jdreyes.webapi.prestamos.model.entities.Funcionario;
 import com.jdreyes.webapi.prestamos.service.dtos.FuncionarioDto;
 
+import java.util.Collections;
+
 public class TransformUtils {
   public static ClienteDto transformCliente(Cliente cliente) {
     ClienteDto dto = new ClienteDto();
@@ -26,7 +28,7 @@ public class TransformUtils {
   public static FuncionarioDto transformFuncionario(Funcionario funcionario) {
     FuncionarioDto dto = new FuncionarioDto();
     dto.setPassword(null);
-    dto.setAuthorities(null);
+    dto.setAuthorities(Collections.EMPTY_LIST);
     dto.setIdFuncionario(funcionario.getIdFuncionario());
     dto.setDepositos(funcionario.getDepositos());
     dto.setGastos(funcionario.getGastos());
@@ -38,6 +40,7 @@ public class TransformUtils {
     dto.setSaldoNeto(funcionario.getSaldoNeto());
     dto.setUserId(funcionario.getIdFuncionario());
     dto.setUsername(null);
+    dto.setEnabled(true);
     return dto;
   }
 }
