@@ -32,6 +32,7 @@ cors:
 
 application:
   name: @project.artifactId@
+  interesrate: 18
 
 build:
   version: @project.version@
