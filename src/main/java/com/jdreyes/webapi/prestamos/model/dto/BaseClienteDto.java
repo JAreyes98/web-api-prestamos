@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class ClienteDto implements Serializable {
+public class BaseClienteDto implements Serializable {
   private static final long serialVersionUID = 1L;
   /**
    * Identificador.
