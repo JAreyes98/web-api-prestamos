@@ -40,7 +40,7 @@ public class AbonosFuncionarioDto implements Serializable {
   @Getter @Setter private BigDecimal monto;
 
   @Transient @Setter @Getter private RutaDto ruta;
-  @Transient @Setter @Getter private ClienteDto cliente;
+  @Transient @Setter @Getter private BaseClienteDto cliente;
   @Transient @Setter @Getter private FuncionarioDto funcionario;
 
 
@@ -48,7 +48,7 @@ public class AbonosFuncionarioDto implements Serializable {
   @PostLoad
   private void init() {
     if (Objects.isNull(cliente)) {
-      cliente = new ClienteDto();
+      cliente = new BaseClienteDto();
       cliente.setId(idCliente);
       cliente.setNombres(nombreCliente);
       cliente.setDireccion("");
