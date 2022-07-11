@@ -92,7 +92,7 @@ public class PrestamosServiceImpl implements PrestamosService {
     if (prestamo.getIdCliente() <= 0)
       throw new BusinessException("Identificador de cliente invalido");
 
-    clienteDAO.findById(prestamo.getIdCliente(), funcionarioDto.getIdFuncionario()).stream()
+    clienteDAO.findById(funcionarioDto.getIdFuncionario(), prestamo.getIdCliente()).stream()
         .findFirst()
         .orElseThrow(
             () ->
