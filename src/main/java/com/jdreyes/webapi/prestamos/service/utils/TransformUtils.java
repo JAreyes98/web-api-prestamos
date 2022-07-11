@@ -11,12 +11,12 @@ import java.util.Collections;
 public class TransformUtils {
   public static ClienteDto transformCliente(Cliente cliente) {
     ClienteDto dto = new ClienteDto();
-    dto.setIdCliente(cliente.getIdCliente());
+    dto.setId(cliente.getIdCliente());
     dto.setCedula(cliente.getCedula());
     dto.setDate(cliente.getDate());
     dto.setDireccion(cliente.getDireccion());
     dto.setFuncionario(transformFuncionario(cliente.getFuncionario()));
-    dto.setNombre(cliente.getNombre());
+    dto.setNombres(cliente.getNombre());
     dto.setMontoPrstamos(cliente.getMontoPrstamos());
     dto.setRuta(new RutaDto(cliente.getRutaId(), null));
     dto.setNoPrestamo(cliente.getNoPrestamo());
