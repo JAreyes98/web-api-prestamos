@@ -94,7 +94,7 @@ public class CobroPrestamoDto extends PrestamoDto implements Serializable {
   /** Contiene la informacion de la ruta. */
   @Setter @Transient private RutaDto ruta;
   /** Contiene la informacion del cliente. */
-  @Setter @Transient private ClienteDto cliente;
+  @Setter @Transient private BaseClienteDto cliente;
 /**
  * Variable que contiene el codigo del prestamo.
  */
@@ -119,9 +119,9 @@ public class CobroPrestamoDto extends PrestamoDto implements Serializable {
    *
    * @return objeto con la info del cliente.
    */
-  public ClienteDto getCliente() {
+  public BaseClienteDto getCliente() {
     if (Objects.isNull(cliente)) {
-      cliente = new ClienteDto();
+      cliente = new BaseClienteDto();
       cliente.setId(idCliente);
       cliente.setNombres(nombre);
       cliente.setDireccion(direccion);
